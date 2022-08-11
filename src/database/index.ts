@@ -1,18 +1,22 @@
-import mongoose from "mongoose"
+import mongoose from "mongoose";
 import Logging from "../config/Logging";
 
-const NAMESPACE = 'Database'
+const NAMESPACE = "Database";
 export default class Database {
+  private dbURL: string;
 
+  constructor(url: string) {
+    this.dbURL = url;
+  }
 
-	constructor(url: string) {
-		mongoose.connect(url);
-	}
-
-	public connect = ():string => {
-		return mongoose.connection.on('connected', () => {}).host;
-	}
-
-
-	// Logging.info(NAMESPACE, `[${req.url}],  - [${res.statusCode}])
+  public connect = async (): Promise<boolean> => {
+    try {
+      await mongoose.connect(this.dbURL);
+      Logging.info(NAMESPACE, `${mongoose.connection.host}`);
+      return true;
+    } catch (err: any) {
+      Logging.error(NAMESPACE, `${err.message}`);
+      throw new Error(err);
+    }
+  };
 }
