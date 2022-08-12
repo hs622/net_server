@@ -12,13 +12,10 @@ const router = express();
 
 /** Database **/
 const db = new Database(config.mongo.url);
-db.connect().then((str) => console.log(str));
-// mongoose.connect(config.mongo.url, { retryWrites: true, w: 'majority' })
-// 	.then(() => {
-// 		Logging.info('MongoDB', 'Connected to cluster.')
-// 		StartServer();
-// 	})
-// 	.catch(error => console.log(error));
+  db.connect()
+    .then(str => {
+      StartServer();
+    });
 
 const StartServer = () => {
   /** Logging the request **/
